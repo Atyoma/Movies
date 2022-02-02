@@ -62,85 +62,60 @@ import { GENRES_STORAGE } from './js/fetchMovies';
 // import countryMarkupHbs from './templates/movie.hbs';
 import movieListMarkupHbs from './templates/movie-list.hbs';
 import modalMarkupHbs from './templates/modal.hbs';
+import getRefs from './js/get-refs';
+import { onHomePageLoading, onLibraryPageLoading } from './js/site-load';
+import { onClickInItem, onClickBackdrop } from './js/modal';
+import { appendMovieMarkup, clearMovieContainer } from './js/add-remove-markup';
 
 var debounce = require('lodash.debounce');
 const DEBOUNCE_DELAY = 600;
 
-// ====объявление глобальных переменных: текст запроса. страницы. кол страниц. ====
+// ====объявление глобальных переменных: текст запроса. страницы. кол страниц. ref'ов ====
 let QUERY = undefined;
 let PAGE = 1;
 let totalPages = undefined;
-
-const refs = {
-  searchBox: document.querySelector('#search-box'),
-  movieList: document.querySelector('.movie-list'),
-  movieModal: document.querySelector('.backdrop'),
-  movieItem: document.querySelector('.movie-item'),
-  closeModalBtn: document.querySelector('.btn-close'),
-  sentinel: document.querySelector('#sentinel'),
-};
+const refs = getRefs();
 
 // ===================Ищет популярные=====================
 
+refs.sitePage.classList.add('js-page-header__home');
+refs.homePageBtn.classList.add('js-navigation__button--current');
+refs.libPageBtnNav.classList.add('js-visually-hidden');
+refs.libBtnWatched.classList.add('js-library__button--current');
+
 refs.searchBox.addEventListener('input', debounce(onSearchInputs, DEBOUNCE_DELAY));
-
-fetchMarkupPopularityForWeek();
-
-function fetchMarkupPopularityForWeek() {
-  fetchPopularity()
-    .then(processGenres)
-    .then(({ results, total_pages }) => {
-      totalPages = total_pages;
-      // ==очистка перед отрисовкой=====
-      clearMovieContainer();
-      appendMovieMarkup(results);
-    });
-}
+refs.siteLogo.addEventListener('click', onHomePageLoading);
+refs.homePageBtn.addEventListener('click', onHomePageLoading);
+refs.libPageBtn.addEventListener('click', onLibraryPageLoading);
 
 // ==============================Открывает-Закрывает Модалку==========================
 refs.movieList.addEventListener('click', onClickInItem);
 refs.movieModal.addEventListener('click', onClickBackdrop);
 
-function onClickInItem(e) {
-  if (e.target.className === 'movie-img') {
-    onOpenModal();
-  }
-}
+fetchMarkupPopularityForWeek();
 
-function onOpenModal() {
-  window.addEventListener('keydown', onEscKeyDown);
-  refs.movieModal.classList.remove('is-hidden');
-  modalMarkup();
-}
+// function fetchMarkupPopularityForWeek() {
+//   fetchPopularity()
+//             .then(processGenres)
+//             .then(({ results, total_pages }) => {
+//                 totalPages = total_pages;
+//                 // ==очистка перед отрисовкой=====
+//                 clearMovieContainer();
+//                 appendMovieMarkup(results);
+//             }
+//             );
+// }
 
-function onCloseModal() {
-  window.removeEventListener('keydown', onEscKeyDown);
-  refs.movieModal.classList.add('is-hidden');
+function fetchMarkupPopularityForWeek() {
+  PAGE = 1;
+  fetchPopularity(PAGE)
+    .then(processGenres)
+    .then(({ results, total_pages }) => {
+      totalPages = total_pages;
+      clearMovieContainer();
+      appendMovieMarkup(results);
+    });
 }
-
-function onClickBackdrop(e) {
-  if (
-    e.target === e.currentTarget ||
-    e.target.nodeName === 'path' ||
-    e.target.nodeName === 'svg' ||
-    e.target.className === 'btn-close'
-  ) {
-    onCloseModal();
-  }
-}
-
-function onEscKeyDown(e) {
-  if (e.code === 'Escape') {
-    onCloseModal();
-  }
-}
-// =======================Рисует Модалку===============================
-function modalMarkup() {
-  const modalMarkup = modalMarkupHbs();
-  refs.movieModal.insertAdjacentHTML('beforeend', modalMarkup);
-}
-// =====================================================================
-refs.searchBox.addEventListener('input', debounce(onSearchInputs, DEBOUNCE_DELAY));
 
 // =======первоначальный разовый запрос жанров и сохранение ==========
 
@@ -166,14 +141,6 @@ function onSearchInputs(e) {
   }
 }
 
-// =======добавление разметки и отрисовка==============
-function appendMovieMarkup(r) {
-  refs.movieList.insertAdjacentHTML('beforeend', movieListMarkupHbs(r));
-}
-// ========очистка страницы===========
-function clearMovieContainer() {
-  refs.movieList.innerHTML = '';
-}
 // ===========обработка строки жанров===============
 function processGenres(response) {
   for (let i = 0; i < response.results.length; i++) {
@@ -221,6 +188,17 @@ const onEntry = entries => {
         return;
       }
       fetchMovies(QUERY, PAGE)
+        .then(processGenres)
+        .then(({ results }) => {
+          appendMovieMarkup(results);
+        });
+    }
+    if (entry.isIntersecting) {
+      PAGE += 1;
+      if (PAGE > totalPages) {
+        return;
+      }
+      fetchPopularity(PAGE)
         .then(processGenres)
         .then(({ results }) => {
           appendMovieMarkup(results);
