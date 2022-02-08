@@ -1,5 +1,6 @@
 export default function getRefs() {
   return {
+    searchForm: document.querySelector('.search-form'),
     searchBox: document.querySelector('#search-box'),
     movieList: document.querySelector('.movie-list'),
     movieModal: document.querySelector('.backdrop'),
@@ -16,5 +17,6 @@ export default function getRefs() {
     libBtnQueue: document.querySelector('#queue'),
     bodyHtml: document.querySelector('body'),
     genresInModal: document.querySelector('.data-genres'),
+    errorMessage: document.querySelector('.error-message'),
   };
 }

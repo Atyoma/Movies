@@ -3,8 +3,12 @@
   padding-left: 21px;
   padding-right: 21px;
   padding-bottom: 0px;
+  // =====под гриды======
+  margin-bottom: 30px;
+  // ======под гриды=====
   height: 230px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)), url(/images/background1/header_mob.jpg);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)),
+    url(/images/background1/header_mob.jpg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -13,7 +17,8 @@
       url(/images/background1/header_mob_x2.jpg);
   }
   @media screen and (min-width: 768px) {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)), url(/images/background1/header_tab.jpg);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)),
+      url(/images/background1/header_tab.jpg);
     padding-left: 71px;
     padding-right: 76px;
   }
@@ -25,12 +30,14 @@
   }
   @media screen and (min-width: 1200px) {
     padding-right: 71px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)), url(/images/background1/header.jpg);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)),
+      url(/images/background1/header.jpg);
   }
   @media screen and (min-width: 1200px) and (min-width: 1200px) and (min-device-pixel-ratio: 2),
     screen and (min-width: 1200px) and (min-resolution: 192dpi),
     screen and (min-width: 1200px) and (min-resolution: 2dppx) {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)), url(/images/background1/header_x2.jpg);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)),
+      url(/images/background1/header_x2.jpg);
   }
 }
 
@@ -40,6 +47,9 @@
   padding-right: 21px;
   padding-bottom: 0px;
   height: 230px;
+    // ===========
+    margin-bottom: 30px;
+    // ===========
   background-image: linear-gradient(rgba(0, 0, 0, 0.56), rgba(0, 0, 0, 0.56)),
     url(/images/background2/header_library_mob.jpg);
   background-repeat: no-repeat;
@@ -135,7 +145,7 @@
   position: absolute;
   bottom: -3px;
   left: 0;
-  content: "";
+  content: '';
   display: block;
   background-color: #ff6b08;
   height: 3px;
@@ -145,6 +155,8 @@
 /* форма ПОИСКОВ ФИЛЬМОВ*/
 .header-search {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   margin-top: 38px;
 }
@@ -153,7 +165,8 @@
   align-items: center;
   justify-content: space-between;
   width: 280px;
-  border-bottom: 0.5px solid #ffffff;
+  margin-bottom: 22px;
+ 
   @media screen and (min-width: 768px) {
     width: 336px;
   }
@@ -168,8 +181,10 @@
   border: none;
 }
 .search-form__input {
+   border-bottom: 0.5px solid #ffffff;
   &:focus {
     box-shadow: 0 5px 15px rgb(255, 107, 8);
+    outline: none;
   }
   color: #ffffff;
   width: 324px;
@@ -183,6 +198,16 @@
     font-size: 14px;
     line-height: 1.14;
   }
+}
+
+// сообщение об ошибке
+.error-message {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ff001b;
 }
 
 /* кнопки WATCHED И QUEUE*/

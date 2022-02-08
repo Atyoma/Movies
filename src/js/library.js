@@ -9,6 +9,7 @@
 //  а также удалять элемент массива из watched - storage и queue - storage
 
 import movieListMarkupHbs from './templates/movie-list.hbs';
+import movieListMarkupHbs from './templates/librery.hbs';
 
 const refs = {
   watchedList: document.querySelector('#watched'),
